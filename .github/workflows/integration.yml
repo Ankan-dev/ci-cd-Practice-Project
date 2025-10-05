@@ -1,11 +1,10 @@
-
-name: Integration
+name: Integration #how yml file is going to do (basically the name of the file)
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "main" ] #It means that if there is a push operation on the main branch then the below jobs will execute
   pull_request:
-    branches: [ "main" ]
+    branches: [ "main" ] #It means that if there is a pull request on the main branch then also the below jobs will execute
 
 jobs:
   build:
@@ -14,20 +13,23 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [18.x, 20.x, 22.x]
+        node-version: [18.x, 20.x, 22.x] #it is actually the node versions where all the jobs can be run. That's the reason its mentioned under strategy
+
+    #Under steps giving names to each uses and runs is optional, giving names just make it more readable. We can just use "use"
 
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v4 #It asks git to checkout the current branch. By default it should be in main branch
     - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v3
-      with:
-        node-version: ${{ matrix.node-version }}
-        cache: 'npm'
-    - name: "Installing Dependencies"
-      run: npm i
+      uses: actions/setup-node@v4 #asking github to setup node environment
+      with: #it means it setup the node environemnt with the stuff mentioned below
+        node-version: ${{ matrix.node-version }} # here it is mentioning the node versions which is fetched from the strategy written above
+        cache: 'npm' # for package manager and caching them, it will use npm
 
-    - name: "Build command"
-      run: npm run build
+    #Till this much was the boilerplate code. After this we'll be writing our own code
+    - name: "Install node dependencies"
+      run: npm i # instruction to install the node dependencies
+    - name: "Build the application"
+      run: npm run build # instruction to build the dependencies
 
   unit-tests:
 
@@ -35,17 +37,18 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [18.x, 20.x, 22.x]
+        node-version: [18.x, 20.x, 22.x] #it is actually the node versions where all the jobs can be run. That's the reason its mentioned under strategy
+
+    #Under steps giving names to each uses and runs is optional, giving names just make it more readable. We can just use "use"
 
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v4 #It asks git to checkout the current branch. By default it should be in main branch
     - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v3
-      with:
-        node-version: ${{ matrix.node-version }}
-        cache: 'npm'
-    - name: "Installing Dependencies"
-      run: npm i
-
-    - name: "Running test cases"
-      run: npm run test
+      uses: actions/setup-node@v4 #asking github to setup node environment
+      with: #it means it setup the node environemnt with the stuff mentioned below
+        node-version: ${{ matrix.node-version }} # here it is mentioning the node versions which is fetched from the strategy written above
+        cache: 'npm' # for package manager and caching them, it will use npm
+    - name: "Install node dependencies"
+      run: npm i # instruction to install the node dependencies
+    - name: "Running Test Cases"
+      run: npm run test # instruction to build the dependencies
